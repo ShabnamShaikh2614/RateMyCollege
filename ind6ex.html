@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Feedback System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: 
+                linear-gradient(135deg, rgba(245, 245, 220, 0.9) 0%, rgba(255, 248, 220, 0.9) 50%, rgba(250, 240, 230, 0.9) 100%),
+                url('https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=1920&h=1080&fit=crop') center/cover no-repeat fixed;
+            height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+            padding: 0.75rem 0;
+            box-shadow: 0 4px 20px rgba(204, 0, 0, 0.3);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #cc0000;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .main-container {
+            height: calc(100vh - 70px);
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+            gap: 1rem;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            height: 100%;
+        }
+
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .glow-block {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 1rem;
+            box-shadow: 
+                0 8px 32px rgba(204, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(204, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(204, 0, 0, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .glow-block:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 20px 40px rgba(204, 0, 0, 0.15),
+                0 0 0 1px rgba(204, 0, 0, 0.2);
+        }
+
+        .glow-block:hover::before {
+            left: 100%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            height: 160px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(204, 0, 0, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .feature-list {
+            flex: 1;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(204, 0, 0, 0.1);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(204, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .feature-content h3 {
+            color: #cc0000;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .feature-content p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            gap: 0.75rem;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .colleges-section {
+            flex: 1;
+            height: 100%;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .section-title {
+            color: #cc0000;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .colleges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.75rem;
+            height: calc(100% - 60px);
+            overflow: hidden;
+        }
+
+        .college-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(204, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(204, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .college-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(204, 0, 0, 0.2);
+        }
+
+        .college-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .college-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid rgba(204, 0, 0, 0.1);
+        }
+
+        .college-name {
+            color: #cc0000;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .rating-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .rating-label {
+            color: #666;
+        }
+
+        .rating-value {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stars {
+            color: #ffd700;
+        }
+
+        .rating-number {
+            color: #cc0000;
+            font-weight: 600;
+        }
+
+        .feedback-section {
+            width: 350px;
+            height: 100%;
+        }
+
+        .feedback-form {
+            height: calc(100% - 60px);
+            overflow: hidden;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cc0000;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid rgba(204, 0, 0, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #cc0000;
+            box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.1);
+        }
+
+        .rating-input {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .rating-input input[type="radio"] {
+            display: none;
+        }
+
+        .rating-input label {
+            font-size: 1.2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.25rem;
+            border-radius: 4px;
+        }
+
+        .rating-input input[type="radio"]:checked ~ label,
+        .rating-input label:hover {
+            color: #ffd700;
+            transform: scale(1.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(204, 0, 0, 0.3);
+        }
+
+        .page-content {
+            display: none;
+            height: 100%;
+        }
+
+        .page-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 1rem;
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        .hero-title {
+            font-size: 1.6rem;
+            color: #cc0000;
+            margin-bottom: 0.25rem;
+            font-weight: 700;
+        }
+
+        .hero-subtitle {
+            font-size: 0.95rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 1200px) {
+            .main-container {
+                flex-direction: column;
+                height: calc(100vh - 70px);
+                overflow: hidden;
+            }
+            
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                height: auto;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                height: 120px;
+            }
+            
+            .main-content {
+                flex-direction: column;
+                flex: 1;
+                overflow: hidden;
+            }
+            
+            .feedback-section {
+                width: 100%;
+                height: auto;
+            }
+            
+            .content-area {
+                flex: 1;
+                overflow: hidden;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="showPage('home', this)">
+                <div class="logo-icon">CF</div>
+                CollegeFeedback Pro
+            </a>
+            <ul class="nav-links">
+                <li><a href="#" class="active" onclick="showPage('home', this)">Dashboard</a></li>
+                <li><a href="#" onclick="showPage('colleges', this)">Colleges</a></li>
+                <li><a href="#" onclick="showPage('feedback', this)">Submit Feedback</a></li>
+                <li><a href="#" onclick="showPage('reviews', this)">Student Reviews</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Home Page -->
+        <div id="home" class="page-content active">
+            <div class="sidebar">
+                <div class="glow-block stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalColleges">156</div>
+                        <div class="stat-label">Colleges Listed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalFeedback">2,847</div>
+                        <div class="stat-label">Reviews</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgRating">4.2</div>
+                        <div class="stat-label">Avg Rating</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="activeUsers">1,293</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                </div>
+                
+                <div class="glow-block feature-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-content">
+                            <h3>Anonymous Feedback</h3>
+                            <p>Complete privacy guaranteed for honest reviews</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-content">
+                            <h3>Real-Time Updates</h3>
+                            <p>Instant rating updates as feedback comes in</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-content">
+                            <h3>Comprehensive Ratings</h3>
+                            <p>Rate academics, facilities, and overall experience</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content">
+                            <h3>Smart Analytics</h3>
+                            <p>Advanced insights for better decision making</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="glow-block hero-section">
+                    <h1 class="hero-title">College Feedback System</h1>
+                    <p class="hero-subtitle">Empowering students with honest, anonymous feedback to make informed educational decisions. Join thousands of students sharing their real college experiences.</p>
+                </div>
+
+                <div class="main-content">
+                    <div class="glow-block colleges-section">
+                        <div class="section-header">
+                            <div class="section-icon">🏛️</div>
+                            <h2 class="section-title">Top Rated Colleges</h2>
+                        </div>
+                        <div class="colleges-grid" id="homeCollegesGrid">
+                            <!-- Top colleges will be populated here -->
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; width: 350px;">
+                        <div class="glow-block" style="height: 200px; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #cc0000 0%, #990000 100%); color: white; font-size: 3rem; border-radius: 16px;">
+                            🎓
+                            <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); color: white; font-size: 0.9rem; text-align: center; opacity: 0.9;">
+                                Celebrating Success
+                            </div>
+                        </div>
+
+                        <div class="glow-block feedback-section" style="flex: 1;">
+                            <div class="section-header">
+                                <div class="section-icon">📝</div>
+                                <h2 class="section-title">Quick Feedback</h2>
+                            </div>
+                            <div class="feedback-form">
+                                <form id="quickFeedbackForm">
+                                    <div class="form-group">
+                                        <label for="quickCollegeSelect">Select College:</label>
+                                        <select id="quickCollegeSelect" required>
+                                            <option value="">Choose a college...</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Overall Rating:</label>
+                                        <div class="rating-input">
+                                            <input type="radio" id="quick5" name="quickRating" value="5">
+                                            <input type="radio" id="quick4" name="quickRating" value="4">
+                                            <input type="radio" id="quick3" name="quickRating" value="3">
+                                            <input type="radio" id="quick2" name="quickRating" value="2">
+                                            <input type="radio" id="quick1" name="quickRating" value="1">
+                                            <label for="quick5">★</label>
+                                            <label for="quick4">★</label>
+                                            <label for="quick3">★</label>
+                                            <label for="quick2">★</label>
+                                            <label for="quick1">★</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="quickComments">Quick Comment:</label>
+                                        <textarea id="quickComments" rows="3" placeholder="Share your experience..."></textarea>
+                                    </div>
+
+                                    <button type="submit" class="btn">Submit Quick Review</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other pages would follow similar structure -->
+        <div id="colleges" class="page-content">
+            <div class="glow-block hero-section">
+                <h1 class="hero-title">All Colleges</h1>
+                <p class="hero-subtitle">Browse comprehensive ratings and reviews from real students</p>
+            </div>
+            <div class="glow-block" style="flex: 1;">
+                <div class="colleges-grid" id="allCollegesGrid" style="height: 100%;">
+                    <!-- All colleges will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <div id="feedback" class="page-content">
+            <div class="glow-block hero-section">
+                <h1 class="hero-title">Submit Detailed Feedback</h1>
+                <p class="hero-subtitle">Help other students by sharing your honest college experience</p>
+            </div>
+            <div class="glow-block" style="flex: 1; display: flex; justify-content: center;">
+                <div style="max-width: 600px; width: 100%;">
+                    <form id="detailedFeedbackForm">
+                        <div class="form-group">
+                            <label for="detailedCollegeSelect">Select College:</label>
+                            <select id="detailedCollegeSelect" required>
+                                <option value="">Choose a college...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Academics Rating:</label>
+                            <div class="rating-input">
+                                <input type="radio" id="academics5" name="academics" value="5">
+                                <input type="radio" id="academics4" name="academics" value="4">
+                                <input type="radio" id="academics3" name="academics" value="3">
+                                <input type="radio" id="academics2" name="academics" value="2">
+                                <input type="radio" id="academics1" name="academics" value="1">
+                                <label for="academics5">★</label>
+                                <label for="academics4">★</label>
+                                <label for="academics3">★</label>
+                                <label for="academics2">★</label>
+                                <label for="academics1">★</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Facilities Rating:</label>
+                            <div class="rating-input">
+                                <input type="radio" id="facilities5" name="facilities" value="5">
+                                <input type="radio" id="facilities4" name="facilities" value="4">
+                                <input type="radio" id="facilities3" name="facilities" value="3">
+                                <input type="radio" id="facilities2" name="facilities" value="2">
+                                <input type="radio" id="facilities1" name="facilities" value="1">
+                                <label for="facilities5">★</label>
+                                <label for="facilities4">★</label>
+                                <label for="facilities3">★</label>
+                                <label for="facilities2">★</label>
+                                <label for="facilities1">★</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Overall Experience:</label>
+                            <div class="rating-input">
+                                <input type="radio" id="overall5" name="overall" value="5">
+                                <input type="radio" id="overall4" name="overall" value="4">
+                                <input type="radio" id="overall3" name="overall" value="3">
+                                <input type="radio" id="overall2" name="overall" value="2">
+                                <input type="radio" id="overall1" name="overall" value="1">
+                                <label for="overall5">★</label>
+                                <label for="overall4">★</label>
+                                <label for="overall3">★</label>
+                                <label for="overall2">★</label>
+                                <label for="overall1">★</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="detailedComments">Detailed Review:</label>
+                            <textarea id="detailedComments" rows="6" placeholder="Share your detailed experience, what you liked, what could be improved..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn">Submit Detailed Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="reviews" class="page-content">
+            <div class="glow-block hero-section">
+                <h1 class="hero-title">Student Reviews</h1>
+                <p class="hero-subtitle">Read honest, anonymous feedback from real students</p>
+            </div>
+            <div class="glow-block" style="flex: 1;">
+                <div id="reviewsFeed" style="height: 100%; overflow: hidden;">
+                    <!-- Reviews will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data with realistic college images
+        const colleges = [
+            { 
+                id: 1, 
+                name: "Stanford University", 
+                academics: 4.8, 
+                facilities: 4.7, 
+                overall: 4.8, 
+                reviews: 234,
+                image: "https://images.unsplash.com/photo-1562774053-701939374585?w=100&h=100&fit=crop&crop=center"
+            },
+            { 
+                id: 2, 
+                name: "MIT", 
+                academics: 4.9, 
+                facilities: 4.6, 
+                overall: 4.7, 
+                reviews: 189,
+                image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop&crop=center"
+            },
+            { 
+                id: 3, 
+                name: "Harvard University", 
+                academics: 4.7, 
+                facilities: 4.5, 
+                overall: 4.6, 
+                reviews: 298,
+                image: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=100&h=100&fit=crop&crop=center"
+            },
+            { 
+                id: 4, 
+                name: "UC Berkeley", 
+                academics: 4.4, 
+                facilities: 4.2, 
+                overall: 4.3, 
+                reviews: 156,
+                image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=100&h=100&fit=crop&crop=center"
+            },
+            { 
+                id: 5, 
+                name: "Yale University", 
+                academics: 4.6, 
+                facilities: 4.4, 
+                overall: 4.5, 
+                reviews: 167,
+                image: "https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=100&h=100&fit=crop&crop=center"
+            },
+            { 
+                id: 6, 
+                name: "Princeton University", 
+                academics: 4.7, 
+                facilities: 4.6, 
+                overall: 4.6, 
+                reviews: 143,
+                image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=100&h=100&fit=crop&crop=center"
+            }
+        ];
+
+        const reviews = [
+            {
+                college: "Stanford University",
+                content: "Incredible research opportunities and world-class faculty. The campus culture is collaborative rather than competitive. Silicon Valley connections are unmatched for tech careers.",
+                timestamp: "2 hours ago",
+                ratings: { academics: 5, facilities: 5, overall: 5 }
+            },
+            {
+                college: "MIT",
+                content: "Academically rigorous but incredibly rewarding. The problem-solving culture here is amazing. Be prepared for intense workload but excellent career prospects.",
+                timestamp: "5 hours ago",
+                ratings: { academics: 5, facilities: 4, overall: 5 }
+            },
+            {
+                college: "Harvard University",
+                content: "Great networking opportunities and prestigious name recognition. Some courses can feel outdated, but the alumni network is incredibly valuable.",
+                timestamp: "1 day ago",
+                ratings: { academics: 4, facilities: 4, overall: 4 }
+            },
+            {
+                college: "UC Berkeley",
+                content: "Excellent value for a top-tier education. Large class sizes in introductory courses, but upper-level classes are more intimate. Great diversity and campus culture.",
+                timestamp: "1 day ago",
+                ratings: { academics: 4, facilities: 4, overall: 4 }
+            },
+            {
+                college: "Yale University",
+                content: "Beautiful campus and strong liberal arts education. The residential college system creates a great sense of community. Very supportive environment.",
+                timestamp: "2 days ago",
+                ratings: { academics: 5, facilities: 4, overall: 5 }
+            }
+        ];
+
+        // Navigation functions
+        function showPage(pageId, element) {
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            if (element) {
+                element.classList.add('active');
+            }
+            
+            if (pageId === 'colleges') {
+                loadAllColleges();
+            } else if (pageId === 'feedback') {
+                loadCollegeOptions('detailedCollegeSelect');
+            } else if (pageId === 'reviews') {
+                loadReviews();
+            }
+        }
+
+        // Generate star display
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            let stars = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '★';
+            }
+            if (hasHalfStar) {
+                stars += '★';
+            }
+            
+            return stars;
+        }
+
+        // Load colleges for home page
+        function loadHomeColleges() {
+            const grid = document.getElementById('homeCollegesGrid');
+            grid.innerHTML = '';
+            
+            // Show top 4 colleges
+            colleges.slice(0, 4).forEach(college => {
+                const card = document.createElement('div');
+                card.className = 'college-card';
+                card.innerHTML = `
+                    <div class="college-header">
+                        <div class="college-image" style="background: linear-gradient(135deg, #cc0000 0%, #990000 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">${college.name.charAt(0)}</div>
+                        <div class="college-name">${college.name}</div>
+                    </div>
+                    <div class="rating-row">
+                        <span class="rating-label">Academics:</span>
+                        <div class="rating-value">
+                            <span class="stars">${generateStars(college.academics)}</span>
+                            <span class="rating-number">${college.academics}</span>
+                        </div>
+                    </div>
+                    <div class="rating-row">
+                        <span class="rating-label">Facilities:</span>
+                        <div class="rating-value">
+                            <span class="stars">${generateStars(college.facilities)}</span>
+                            <span class="rating-number">${college.facilities}</span>
+                        </div>
+                    </div>
+                    <div class="rating-row">
+                        <span class="rating-label">Overall:</span>
+                        <div class="rating-value">
+                            <span class="stars">${generateStars(college.overall)}</span>
+                            <span class="rating-number">${college.overall}</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; color: #666; font-size: 0.8rem; text-align: center;">
+                        ${college.reviews} reviews
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Load all colleges
+        function loadAllColleges() {
+            const grid = document.getElementById('allCollegesGrid');
+            grid.innerHTML = '';
+            
+            colleges.forEach(college => {
+                const card = document.createElement('div');
+                card.className = 'college-card';
+                card.innerHTML = `
+                    <div class="college-header">
+                        <div class="college-image" style="background: linear-gradient(135deg, #cc0000 0%, #990000 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem;">${college.name.charAt(0)}</div>
+                        <div class="college-name">${college.name}</div>
+                    </div>
+                    <div class="rating-row">
+                        <span class="rating-label">Academics:</span>
+                        <div class="rating-value">
+                            <span class="stars">${generateStars(college.academics)}</span>
+                            <span class="rating-number">${college.academics}</span>
+                        </div>
+                    </div>
+                    <div class="rating-row">
+                        <span class="rating-label">Facilities:</span>
+                        <div class="rating-value">
+                            <span class="stars">${generateStars(college.facilities)}</span>
+                            <span class="rating-number">${college.facilities}</span>
+                        </div>
+                    </div>
+                    <div class="rating-row">
+                        <span class="rating-label">Overall:</span>
+                        <div class="rating-value">
+                            <span class="stars">${generateStars(college.overall)}</span>
+                            <span class="rating-number">${college.overall}</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; color: #666; font-size: 0.8rem; text-align: center;">
+                        ${college.reviews} anonymous reviews
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Load college options for forms
+        function loadCollegeOptions(selectId) {
+            const select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">Choose a college...</option>';
+            
+            colleges.forEach(college => {
+                const option = document.createElement('option');
+                option.value = college.id;
+                option.textContent = college.name;
+                select.appendChild(option);
+            });
+        }
+
+        // Load reviews
+        function loadReviews() {
+            const feed = document.getElementById('reviewsFeed');
+            feed.innerHTML = '';
+            
+            // Show only first 3 reviews to fit screen
+            reviews.slice(0, 3).forEach(review => {
+                const reviewDiv = document.createElement('div');
+                reviewDiv.className = 'glow-block';
+                reviewDiv.style.marginBottom = '0.75rem';
+                reviewDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(204, 0, 0, 0.1);">
+                        <h3 style="color: #cc0000; margin: 0; font-size: 1rem;">${review.college}</h3>
+                        <span style="background: #cc0000; color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.7rem;">Anonymous</span>
+                    </div>
+                    <div style="line-height: 1.4; color: #333; margin-bottom: 0.75rem; font-size: 0.9rem;">${review.content}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.75rem; border-top: 1px solid rgba(204, 0, 0, 0.1); font-size: 0.8rem; color: #666;">
+                        <div>
+                            <span style="color: #ffd700;">${generateStars(review.ratings.academics)}</span> Academics |
+                            <span style="color: #ffd700;">${generateStars(review.ratings.facilities)}</span> Facilities |
+                            <span style="color: #ffd700;">${generateStars(review.ratings.overall)}</span> Overall
+                        </div>
+                        <div>${review.timestamp}</div>
+                    </div>
+                `;
+                feed.appendChild(reviewDiv);
+            });
+        }
+
+        // Handle form submissions
+        document.getElementById('quickFeedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFeedbackSubmission(this, 'quick');
+        });
+
+        document.getElementById('detailedFeedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFeedbackSubmission(this, 'detailed');
+        });
+
+        function handleFeedbackSubmission(form, type) {
+            const formData = new FormData(form);
+            const collegeId = formData.get(type === 'quick' ? 'quickCollegeSelect' : 'detailedCollegeSelect');
+            
+            if (!collegeId) {
+                alert('Please select a college.');
+                return;
+            }
+
+            // Simulate submission
+            const college = colleges.find(c => c.id == collegeId);
+            college.reviews += 1;
+            
+            // Update stats
+            document.getElementById('totalFeedback').textContent = parseInt(document.getElementById('totalFeedback').textContent) + 1;
+            
+            alert('Thank you for your anonymous feedback! Your review has been submitted successfully.');
+            form.reset();
+            
+            // Refresh displays
+            loadHomeColleges();
+            if (document.getElementById('allCollegesGrid').innerHTML) {
+                loadAllColleges();
+            }
+        }
+
+        // Rating input interactions
+        document.querySelectorAll('.rating-input').forEach(ratingGroup => {
+            const inputs = ratingGroup.querySelectorAll('input[type="radio"]');
+            const labels = ratingGroup.querySelectorAll('label');
+            
+            labels.forEach((label, index) => {
+                label.addEventListener('mouseover', () => {
+                    labels.forEach((l, i) => {
+                        if (i >= index) {
+                            l.style.color = '#ffd700';
+                        } else {
+                            l.style.color = '#ddd';
+                        }
+                    });
+                });
+                
+                label.addEventListener('mouseout', () => {
+                    const checkedInput = ratingGroup.querySelector('input[type="radio"]:checked');
+                    if (checkedInput) {
+                        const checkedIndex = Array.from(inputs).indexOf(checkedInput);
+                        labels.forEach((l, i) => {
+                            if (i >= checkedIndex) {
+                                l.style.color = '#ffd700';
+                            } else {
+                                l.style.color = '#ddd';
+                            }
+                        });
+                    } else {
+                        labels.forEach(l => l.style.color = '#ddd');
+                    }
+                });
+            });
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadHomeColleges();
+            loadCollegeOptions('quickCollegeSelect');
+            loadCollegeOptions('detailedCollegeSelect');
+            loadReviews();
+            
+            // Simulate real-time updates
+            setInterval(() => {
+                const stats = ['totalColleges', 'totalFeedback', 'activeUsers'];
+                const randomStat = stats[Math.floor(Math.random() * stats.length)];
+                const element = document.getElementById(randomStat);
+                if (Math.random() > 0.8) {
+                    const currentValue = parseInt(element.textContent);
+                    element.textContent = currentValue + Math.floor(Math.random() * 3) + 1;
+                }
+            }, 8000);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9748db08321c2e58',t:'MTc1NjEwMTQ4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
